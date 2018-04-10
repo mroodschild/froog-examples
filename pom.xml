@@ -24,7 +24,7 @@
             <version>v0.2</version>
         </dependency>
         <dependency>
-            <groupId>org.gitia</groupId>
+            <groupId>com.github.mroodschild</groupId>
             <artifactId>JDataAnalysis</artifactId>
             <version>0.2</version>
         </dependency>
