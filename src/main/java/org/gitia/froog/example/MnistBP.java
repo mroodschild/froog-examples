@@ -30,8 +30,6 @@ import org.gitia.jdataanalysis.data.stats.STD;
 import org.gitia.froog.Feedforward;
 import org.gitia.froog.layer.Layer;
 import org.gitia.froog.statistics.Clock;
-import org.gitia.froog.statistics.Compite;
-import org.gitia.froog.statistics.ConfusionMatrix;
 import org.gitia.froog.trainingalgorithm.Backpropagation;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.lossfunction.LossFunction;
@@ -70,6 +68,9 @@ public class MnistBP {
 
         int inputSize = input.numCols();
         int outputSize = output.numCols();
+        
+        input = input.transpose();
+        output = output.transpose();
 
         //==================== Preparamos la RNA =======================
         Random r = new Random(1);
@@ -88,7 +89,7 @@ public class MnistBP {
         bp.setMomentum(0.9);
         bp.setLossFunction(LossFunction.CROSSENTROPY);
         
-        bp.entrenar(net, input, output);
+        bp.train(net, input, output);
         
         clock.stop();
         double time1 = clock.timeSec();

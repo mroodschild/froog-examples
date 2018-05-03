@@ -21,17 +21,17 @@
         <dependency>
             <groupId>com.github.mroodschild</groupId>
             <artifactId>froog</artifactId>
-            <version>v0.2</version>
+            <version>0.3</version>
         </dependency>
         <dependency>
             <groupId>com.github.mroodschild</groupId>
             <artifactId>JDataAnalysis</artifactId>
-            <version>0.2</version>
+            <version>0.3</version>
         </dependency>
         <dependency>
             <groupId>org.ejml</groupId>
             <artifactId>ejml-all</artifactId>
-            <version>0.33</version>
+            <version>0.34</version>
         </dependency>
     </dependencies>
 </project>

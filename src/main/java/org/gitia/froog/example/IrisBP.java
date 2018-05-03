@@ -24,7 +24,6 @@
 package org.gitia.froog.example;
 
 import org.gitia.jdataanalysis.CSV;
-import org.gitia.jdataanalysis.data.stats.FilterConstantColumns;
 import org.gitia.jdataanalysis.data.stats.STD;
 import java.util.Random;
 import org.ejml.simple.SimpleMatrix;
@@ -43,48 +42,43 @@ import org.gitia.froog.transferfunction.TransferFunction;
 public class IrisBP {
 
     public static void main(String[] args) {
-        //================== Preparación de los datos ==========================
+        //get data
         SimpleMatrix input = CSV.open("src/main/resources/iris/iris-in.csv");
         SimpleMatrix output = CSV.open("src/main/resources/iris/iris-out.csv");
 
-        //ajustamos la desviación standard
-        FilterConstantColumns filter = new FilterConstantColumns();
-        filter.fit(input);
-        System.out.println("Dimensiones entrada");
-        input.printDimensions();
-
-        System.out.println("Dimensiones salida:");
-        output.printDimensions();
-
-        input = filter.eval(input);
-        System.out.println("Dimensiones finales");
-        input.printDimensions();
-
+        //Standard Desviation
         STD std = new STD();
         std.fit(input);
 
-        //convertimos los datos
+        //normalization
         input = std.eval(input);
+        
         Random random = new Random(1);
         
-//        input = input.transpose();
-//        output = output.transpose();
+        //set data in horizontal format (a column is a register and a row is a feature)
+        input = input.transpose();
+        output = output.transpose();
 
+        //setting backpropagation
         Backpropagation bp = new Backpropagation();
-        bp.setEpoch(1);
+        bp.setEpoch(1000);
         bp.setMomentum(0.9);
         bp.setClassification(true);
         bp.setLossFunction(LossFunction.CROSSENTROPY);
 
+        //number of neurons
         int Nhl = 2;
 
         Feedforward net = new Feedforward();
 
-        net.addLayer(new Layer(input.numCols(), Nhl, TransferFunction.TANSIG, random));
-        net.addLayer(new Layer(Nhl, output.numCols(), TransferFunction.SOFTMAX, random));
+        //add layers to neural network
+        net.addLayer(new Layer(input.numRows(), Nhl, TransferFunction.TANSIG, random));
+        net.addLayer(new Layer(Nhl, output.numRows(), TransferFunction.SOFTMAX, random));
         
-        bp.entrenar(net, input, output);
+        //train your net
+        bp.train(net, input, output);
         
+        //show results
         System.out.println("Print all output");
         SimpleMatrix salida = net.output(input);
         ConfusionMatrix confusionMatrix = new ConfusionMatrix();
