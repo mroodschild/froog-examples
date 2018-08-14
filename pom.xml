@@ -19,12 +19,12 @@
     </repositories> 
     <dependencies>
         <dependency>
-            <groupId>com.github.mroodschild</groupId>
+            <groupId>org.gitia</groupId>
             <artifactId>froog</artifactId>
             <version>0.3</version>
         </dependency>
         <dependency>
-            <groupId>com.github.mroodschild</groupId>
+            <groupId>org.gitia</groupId>
             <artifactId>JDataAnalysis</artifactId>
             <version>0.3</version>
         </dependency>
