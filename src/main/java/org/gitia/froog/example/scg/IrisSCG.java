@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.gitia.froog.example;
+package org.gitia.froog.example.scg;
 
 import org.gitia.jdataanalysis.CSV;
 import org.gitia.jdataanalysis.data.stats.STD;
@@ -28,15 +28,14 @@ import org.gitia.froog.layer.Layer;
 import org.gitia.froog.lossfunction.LossFunction;
 import org.gitia.froog.statistics.Compite;
 import org.gitia.froog.statistics.ConfusionMatrix;
-import org.gitia.froog.optimizer.Backpropagation;
-import org.gitia.froog.optimizer.accelerate.AccelerateRule;
+import org.gitia.froog.optimizer.SCG;
 import org.gitia.froog.transferfunction.TransferFunction;
 
 /**
  *
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
-public class IrisBP {
+public class IrisSCG {
 
     public static void main(String[] args) {
         //get data
@@ -57,14 +56,13 @@ public class IrisBP {
         output = output.transpose();
 
         //setting backpropagation
-        Backpropagation bp = new Backpropagation();
-        bp.setEpoch(1000);
-        bp.setAcceleration(AccelerateRule.momentumRumelhart(0.9));
-        bp.setClassification(true);
-        bp.setLossFunction(LossFunction.CROSSENTROPY);
+        SCG scg = new SCG();
+        scg.setEpoch(20);
+        scg.setClassification(true);
+        scg.setLossFunction(LossFunction.CROSSENTROPY);
 
         //number of neurons
-        int Nhl = 2;
+        int Nhl = 6;
 
         Feedforward net = new Feedforward();
 
@@ -73,7 +71,7 @@ public class IrisBP {
         net.addLayer(new Layer(Nhl, output.numRows(), TransferFunction.SOFTMAX, random));
         
         //train your net
-        bp.train(net, input, output);
+        scg.train(net, input, output);
         
         //show results
         System.out.println("Print all output");

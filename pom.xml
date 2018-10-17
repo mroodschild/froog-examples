@@ -11,12 +11,12 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     
-    <repositories>
+    <!--<repositories>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-    </repositories> 
+    </repositories> -->
     <dependencies>
         <dependency>
             <groupId>org.gitia</groupId>
