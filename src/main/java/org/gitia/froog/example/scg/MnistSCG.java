@@ -25,7 +25,7 @@ import org.gitia.jdataanalysis.data.stats.FilterConstantColumns;
 import org.gitia.jdataanalysis.data.stats.STD;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 import org.gitia.froog.lossfunction.LossFunction;
 import org.gitia.froog.statistics.Clock;
 import org.gitia.froog.statistics.Compite;
@@ -72,8 +72,8 @@ public class MnistSCG {
         //==================== Preparamos la RNA =======================
         Random r = new Random(1);
         Feedforward net = new Feedforward();
-        net.addLayer(new Layer(inputSize, 300, TransferFunction.TANSIG, r));
-        net.addLayer(new Layer(300, outputSize, TransferFunction.SOFTMAX, r));
+        net.addLayer(new Dense(inputSize, 300, TransferFunction.TANSIG, r));
+        net.addLayer(new Dense(300, outputSize, TransferFunction.SOFTMAX, r));
 
         //==================== /Preparamos la RNA ======================
         Clock clock = new Clock();

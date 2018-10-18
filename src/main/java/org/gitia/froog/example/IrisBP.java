@@ -24,7 +24,7 @@ import org.gitia.jdataanalysis.data.stats.STD;
 import java.util.Random;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.Feedforward;
-import org.gitia.froog.layer.Layer;
+import org.gitia.froog.layer.Dense;
 import org.gitia.froog.lossfunction.LossFunction;
 import org.gitia.froog.statistics.Compite;
 import org.gitia.froog.statistics.ConfusionMatrix;
@@ -69,8 +69,8 @@ public class IrisBP {
         Feedforward net = new Feedforward();
 
         //add layers to neural network
-        net.addLayer(new Layer(input.numRows(), Nhl, TransferFunction.TANSIG, random));
-        net.addLayer(new Layer(Nhl, output.numRows(), TransferFunction.SOFTMAX, random));
+        net.addLayer(new Dense(input.numRows(), Nhl, TransferFunction.TANSIG, random));
+        net.addLayer(new Dense(Nhl, output.numRows(), TransferFunction.SOFTMAX, random));
         
         //train your net
         bp.train(net, input, output);
