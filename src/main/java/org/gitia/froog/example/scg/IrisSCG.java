@@ -42,14 +42,14 @@ public class IrisSCG {
         SimpleMatrix input = CSV.open("src/main/resources/iris/iris-in.csv");
         SimpleMatrix output = CSV.open("src/main/resources/iris/iris-out.csv");
 
-        //Standard Desviation
-        STD std = new STD();
-        std.fit(input);
-
-        //normalization
-        input = std.eval(input);
+//        //Standard Desviation
+//        STD std = new STD();
+//        std.fit(input);
+//
+//        //normalization
+//        input = std.eval(input);
         
-        Random random = new Random();
+        Random random = new Random(3);
         
         //set data in horizontal format (a column is a register and a row is a feature)
         input = input.transpose();
@@ -57,7 +57,7 @@ public class IrisSCG {
 
         //setting backpropagation
         SCG scg = new SCG();
-        scg.setEpoch(10);
+        scg.setEpoch(1500);
         scg.setClassification(true);
         scg.setLossFunction(LossFunction.CROSSENTROPY);
 
