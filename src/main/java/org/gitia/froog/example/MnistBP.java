@@ -30,6 +30,8 @@ import org.gitia.froog.optimizer.Backpropagation;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.lossfunction.LossFunction;
 import org.gitia.froog.optimizer.accelerate.AccelerateRule;
+import org.gitia.froog.statistics.Compite;
+import org.gitia.froog.statistics.ConfusionMatrix;
 import org.gitia.froog.transferfunction.TransferFunction;
 
 /**
@@ -82,7 +84,7 @@ public class MnistBP {
         Backpropagation bp = new Backpropagation();
         bp.setLearningRate(0.01);
         bp.setRegularization(1e-4);
-        bp.setEpoch(5);
+        bp.setEpoch(20);
         bp.setAcceleration(AccelerateRule.momentumRumelhart(0.9));
         bp.setLossFunction(LossFunction.CROSSENTROPY);
         
@@ -91,5 +93,12 @@ public class MnistBP {
         clock.stop();
         double time1 = clock.timeSec();
         System.out.println("Tiempo: " + time1);
+        
+        //show results
+        System.out.println("Print all output");
+        SimpleMatrix salida = net.output(input);
+        ConfusionMatrix confusionMatrix = new ConfusionMatrix();
+        confusionMatrix.eval(Compite.eval(salida.transpose()), output.transpose());
+        confusionMatrix.printStats();
     }
 }
