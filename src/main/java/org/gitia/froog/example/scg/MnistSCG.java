@@ -45,19 +45,19 @@ public class MnistSCG {
         SimpleMatrix output = CSV.open("src/main/resources/mnist/mnist_train_out_50000.csv");
 
         //ajustamos la desviación standard
-        FilterConstantColumns filter = new FilterConstantColumns();
-        filter.fit(input);
-        System.out.println("Dimensiones iniciales");
-        input.printDimensions();
-        input = filter.eval(input);
-        System.out.println("Dimensiones finales");
-        input.printDimensions();
+//        FilterConstantColumns filter = new FilterConstantColumns();
+//        filter.fit(input);
+//        System.out.println("Dimensiones iniciales");
+//        input.printDimensions();
+//        input = filter.eval(input);
+//        System.out.println("Dimensiones finales");
+//        input.printDimensions();
 
-        STD std = new STD();
-        std.fit(input);
-
-        //convertimos los datos
-        input = std.eval(input);
+//        STD std = new STD();
+//        std.fit(input);
+//
+//        //convertimos los datos
+//        input = std.eval(input);
         //================== /Preparación de los datos =========================
 
         //=================  configuraciones del ensayo ========================
@@ -72,15 +72,15 @@ public class MnistSCG {
         //==================== Preparamos la RNA =======================
         Random r = new Random(1);
         Feedforward net = new Feedforward();
-        net.addLayer(new Dense(inputSize, 300, TransferFunction.TANSIG, r));
-        net.addLayer(new Dense(300, outputSize, TransferFunction.SOFTMAX, r));
+        net.addLayer(new Dense(inputSize, 500, TransferFunction.TANSIG, r));
+        net.addLayer(new Dense(500, outputSize, TransferFunction.SOFTMAX, r));
 
         //==================== /Preparamos la RNA ======================
         Clock clock = new Clock();
         clock.start();
         
         SCG cg = new SCG();
-        cg.setEpoch(10);
+        cg.setEpoch(5);
         cg.setClassification(true);
         cg.setLossFunction(LossFunction.CROSSENTROPY);
         cg.train(net, input, output);

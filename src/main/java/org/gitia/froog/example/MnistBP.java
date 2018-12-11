@@ -41,7 +41,7 @@ import org.gitia.froog.transferfunction.TransferFunction;
 public class MnistBP {
 
     public static void main(String[] args) {
-        
+
         //================== Preparación de los datos ==========================
         SimpleMatrix input = CSV.open("src/main/resources/mnist/mnist_train_in_50000.csv");
         SimpleMatrix output = CSV.open("src/main/resources/mnist/mnist_train_out_50000.csv");
@@ -64,10 +64,9 @@ public class MnistBP {
 
         //=================  configuraciones del ensayo ========================
         //Preparamos el algoritmo de entrenamiento
-
         int inputSize = input.numCols();
         int outputSize = output.numCols();
-        
+
         input = input.transpose();
         output = output.transpose();
 
@@ -80,20 +79,21 @@ public class MnistBP {
         //==================== /Preparamos la RNA ======================
         Clock clock = new Clock();
         clock.start();
-        
+
         Backpropagation bp = new Backpropagation();
         bp.setLearningRate(0.01);
         bp.setRegularization(1e-4);
         bp.setEpoch(20);
-        bp.setAcceleration(AccelerateRule.momentumRumelhart(0.9));
+        //bp.setAcceleration(AccelerateRule.momentumRumelhart(0.9));
+        bp.setAcceleration(AccelerateRule.adam(0.9, 0.999, 1e-8, 2));
         bp.setLossFunction(LossFunction.CROSSENTROPY);
-        
+
         bp.train(net, input, output);
-        
+
         clock.stop();
         double time1 = clock.timeSec();
         System.out.println("Tiempo: " + time1);
-        
+
         //show results
         System.out.println("Print all output");
         SimpleMatrix salida = net.output(input);

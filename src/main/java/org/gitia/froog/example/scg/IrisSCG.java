@@ -57,7 +57,7 @@ public class IrisSCG {
 
         //setting backpropagation
         SCG scg = new SCG();
-        scg.setEpoch(50);
+        scg.setEpoch(100);
         scg.setClassification(true);
         scg.setLossFunction(LossFunction.CROSSENTROPY);
 
