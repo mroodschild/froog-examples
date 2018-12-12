@@ -70,17 +70,17 @@ public class MnistSCG {
         output = output.transpose();
 
         //==================== Preparamos la RNA =======================
-        Random r = new Random(1);
+        Random r = new Random();
         Feedforward net = new Feedforward();
-        net.addLayer(new Dense(inputSize, 500, TransferFunction.TANSIG, r));
-        net.addLayer(new Dense(500, outputSize, TransferFunction.SOFTMAX, r));
+        net.addLayer(new Dense(inputSize, 300, TransferFunction.TANSIG, r));
+        net.addLayer(new Dense(300, outputSize, TransferFunction.SOFTMAX, r));
 
         //==================== /Preparamos la RNA ======================
         Clock clock = new Clock();
         clock.start();
 
         SCG cg = new SCG();
-        cg.setEpoch(1);
+        cg.setEpoch(10);
         cg.setClassification(true);
         cg.setLossFunction(LossFunction.CROSSENTROPY);
         cg.train(net, input, output);
