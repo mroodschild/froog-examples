@@ -44,6 +44,7 @@ public class MnistSCG {
         SimpleMatrix input = CSV.open("src/main/resources/mnist/mnist_train_in_50000.csv");
         SimpleMatrix output = CSV.open("src/main/resources/mnist/mnist_train_out_50000.csv");
 
+        
         //ajustamos la desviación standard
 //        FilterConstantColumns filter = new FilterConstantColumns();
 //        filter.fit(input);
@@ -52,7 +53,7 @@ public class MnistSCG {
 //        input = filter.eval(input);
 //        System.out.println("Dimensiones finales");
 //        input.printDimensions();
-
+//
 //        STD std = new STD();
 //        std.fit(input);
 //
@@ -62,7 +63,6 @@ public class MnistSCG {
 
         //=================  configuraciones del ensayo ========================
         //Preparamos el algoritmo de entrenamiento
-
         int inputSize = input.numCols();
         int outputSize = output.numCols();
 
@@ -78,15 +78,15 @@ public class MnistSCG {
         //==================== /Preparamos la RNA ======================
         Clock clock = new Clock();
         clock.start();
-        
+
         SCG cg = new SCG();
-        cg.setEpoch(5);
+        cg.setEpoch(1);
         cg.setClassification(true);
         cg.setLossFunction(LossFunction.CROSSENTROPY);
         cg.train(net, input, output);
         clock.stop();
         double time1 = clock.timeSec();
-        
+
         System.out.println("Tiempo: " + time1);
 
         SimpleMatrix out1 = Compite.eval(net.output(input).transpose());
