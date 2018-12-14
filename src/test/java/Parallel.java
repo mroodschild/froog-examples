@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-
 import java.util.stream.IntStream;
 import org.ejml.MatrixDimensionException;
 import org.ejml.data.DMatrix1Row;
@@ -34,35 +33,35 @@ public class Parallel {
 
         IntStream.range(0, a.numRows).parallel()
                 .forEach(i -> {
-            int indexCbase = i * c.numCols;//???
-            double valA;//??
+                    int indexCbase = i * c.numCols;//???
+                    double valA;//??
 
-            int indexA = i * a.numCols;
+                    int indexA = i * a.numCols;
 
-            // need to assign c.data to a value initially
-            int indexB = 0;
-            int indexC = indexCbase;
-            int end = indexB + b.numCols;
+                    // need to assign c.data to a value initially
+                    int indexB = 0;
+                    int indexC = indexCbase;
+                    int end = indexB + b.numCols;
 
-            valA = a.get(indexA++);
+                    valA = a.get(indexA++);
 
-            while (indexB < end) {
-                c.set(indexC++, valA * b.get(indexB++));
-            }
+                    while (indexB < end) {
+                        c.set(indexC++, valA * b.get(indexB++));
+                    }
 
-            // now add to it
-            while (indexB != endOfKLoop) { // k loop
-                indexC = indexCbase;
-                end = indexB + b.numCols;
+                    // now add to it
+                    while (indexB != endOfKLoop) { // k loop
+                        indexC = indexCbase;
+                        end = indexB + b.numCols;
 
-                valA = a.get(indexA++);
+                        valA = a.get(indexA++);
 
-                while (indexB < end) { // j loop
-                    c.plus(indexC++, valA * b.get(indexB++));
+                        while (indexB < end) { // j loop
+                            c.plus(indexC++, valA * b.get(indexB++));
+                        }
+                    }
                 }
-            }
-        }
-        );
+                );
 
 //        for (int i = 0; i < a.numRows; i++) {
 //            int indexA = i * a.numCols;

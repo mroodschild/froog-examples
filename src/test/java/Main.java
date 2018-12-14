@@ -4,11 +4,8 @@
  * and open the template in the editor.
  */
 
-
 import java.util.Random;
-import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.MatrixType;
-import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.mult.MatrixMatrixMult_DDRM;
 //import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
@@ -21,37 +18,41 @@ import org.gitia.froog.statistics.Clock;
 public class Main {
 
     public static void main(String[] args) {
-        //System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "4");
+        //System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "1");
         Clock c = new Clock();
-        Random r = new Random();
+        Random r;// = new Random();
         
-        int dim = 100;
-        int aDim = 500;
-        int bDim = 784;
-        
-        SimpleMatrix A = SimpleMatrix.random_DDRM(aDim, dim, -200, 200, r);
-        SimpleMatrix B = SimpleMatrix.random_DDRM(dim, bDim, -200, 200, r);
-        SimpleMatrix C = new SimpleMatrix(aDim, bDim, MatrixType.DDRM);
-        
-        A = SimpleMatrix.random_DDRM(aDim, dim, -200, 200, r);
-        B = SimpleMatrix.random_DDRM(dim, bDim, -200, 200, r);
-        C = new SimpleMatrix(aDim, bDim, MatrixType.DDRM);
+        int[] dimensiones = {10, 20, 30, 40, 50, 70, 100, 150, 200, 300, 400, 
+            600, 800, 1000, 1500, 2000,2500,3000,3500,4000,5000,7000};
 
-        c.start();
-        Parallel.mult_reorder(A.getDDRM(), B.getDDRM(), C.getDDRM());
-        c.stop();
-        c.printTime("Parallel");
-        
-        A = SimpleMatrix.random_DDRM(aDim, dim, -200, 200, r);
-        B = SimpleMatrix.random_DDRM(dim, bDim, -200, 200, r);
-        C = new SimpleMatrix(aDim, bDim, MatrixType.DDRM);
+        SimpleMatrix A;
+        SimpleMatrix B;
+        SimpleMatrix C;
 
-        c.start();
-        MatrixMatrixMult_DDRM.mult_reorder(A.getDDRM(), B.getDDRM(), C.getDDRM());
-        //CommonOps_DDRM.mult(A.getDDRM(), B.getDDRM(), C.getDDRM());
-        c.stop();
-        c.printTime("EJML");
-
+        for (int i = 0; i < dimensiones.length; i++) {
+            r = new Random(1);
+            int dim = dimensiones[i];
+            A = SimpleMatrix.random_DDRM(dim, dim, -200, 200, r);
+            B = SimpleMatrix.random_DDRM(dim, dim, -200, 200, r);
+            C = new SimpleMatrix(dim, dim, MatrixType.DDRM);
+            c.start();
+            Parallel.mult_reorder(A.getDDRM(), B.getDDRM(), C.getDDRM());
+            c.stop();
+            c.printTime("Parallel dim:\t"+dim+"\t");
+        }
         
+        for (int i = 0; i < dimensiones.length; i++) {
+            r = new Random(1);
+            int dim = dimensiones[i];
+            A = SimpleMatrix.random_DDRM(dim, dim, -200, 200, r);
+            B = SimpleMatrix.random_DDRM(dim, dim, -200, 200, r);
+            C = new SimpleMatrix(dim, dim, MatrixType.DDRM);
+            c.start();
+            MatrixMatrixMult_DDRM.mult_reorder(A.getDDRM(), B.getDDRM(), C.getDDRM());
+            c.stop();
+            c.printTime("EJML dim:\t"+dim+"\t");
+
+        }
+
     }
 }
