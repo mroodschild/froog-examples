@@ -44,7 +44,6 @@ public class MnistSCG {
         SimpleMatrix input = CSV.open("src/main/resources/mnist/mnist_train_in_50000.csv");
         SimpleMatrix output = CSV.open("src/main/resources/mnist/mnist_train_out_50000.csv");
 
-        
         //ajustamos la desviación standard
         FilterConstantColumns filter = new FilterConstantColumns();
         filter.fit(input);
@@ -72,15 +71,15 @@ public class MnistSCG {
         //==================== Preparamos la RNA =======================
         Random r = new Random();
         Feedforward net = new Feedforward();
-        net.addLayer(new Dense(inputSize, 2000, TransferFunction.RELU, r));
-        net.addLayer(new Dense(2000, outputSize, TransferFunction.SOFTMAX, r));
+        net.addLayer(new Dense(inputSize, 300, TransferFunction.TANSIG, r));
+        net.addLayer(new Dense(300, outputSize, TransferFunction.SOFTMAX, r));
 
         //==================== /Preparamos la RNA ======================
         Clock clock = new Clock();
         clock.start();
 
         SCG scg = new SCG();
-        scg.setEpoch(1);
+        scg.setEpoch(2);
         scg.setClassification(true);
         scg.setLossFunction(LossFunction.CROSSENTROPY);
         scg.train(net, input, output);
