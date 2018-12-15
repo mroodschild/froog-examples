@@ -1,9 +1,22 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2018 
+ *   Matías Roodschild <mroodschild@gmail.com>.
+ *   Jorge Gotay Sardiñas <jgotay57@gmail.com>.
+ *   Adrian Will <adrian.will.01@gmail.com>.
+ *   Sebastián Rodriguez <sebastian.rodriguez@gitia.org>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 import java.util.stream.IntStream;
 import org.ejml.MatrixDimensionException;
 import org.ejml.data.DMatrix1Row;
@@ -35,16 +48,13 @@ public class Parallel {
                 .forEach(i -> {
                     int indexCbase = i * c.numCols;
                     double valA;
-
                     int indexA = i * a.numCols;
-
                     // need to assign c.data to a value initially
                     int indexB = 0;
                     int indexC = indexCbase;
                     int end = indexB + b.numCols;
 
                     valA = a.get(indexA++);
-
                     while (indexB < end) {
                         c.set(indexC++, valA * b.get(indexB++));
                     }
@@ -53,14 +63,42 @@ public class Parallel {
                     while (indexB != endOfKLoop) { // k loop
                         indexC = indexCbase;
                         end = indexB + b.numCols;
-
                         valA = a.get(indexA++);
-
                         while (indexB < end) { // j loop
                             c.plus(indexC++, valA * b.get(indexB++));
                         }
                     }
-                }
-                );
+                });
     }
+
+    /**
+     * @see CommonOps_DDRM#mult( org.ejml.data.DMatrix1Row,
+     * org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
+     */
+    public static void mult_small(DMatrix1Row a, DMatrix1Row b, DMatrix1Row c) {
+        if (a == c || b == c) {
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        } else if (a.numCols != b.numRows) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        }
+        c.reshape(a.numRows, b.numCols);
+        
+        IntStream.range(0, a.numRows).parallel()
+                .forEach(i -> {
+                    int index = i * b.numCols;
+                    int cIndex = index;
+                    for (int j = 0; j < b.numCols; j++) {
+                        int indexA = index;
+                        double total = 0;
+                        int indexB = j;
+                        int end = indexA + b.numRows;
+                        while (indexA < end) {
+                            total += a.get(indexA++) * b.get(indexB);
+                            indexB += b.numCols;   
+                        }
+                        c.set(cIndex++, total);
+                    }
+                });
+    }
+
 }
