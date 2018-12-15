@@ -22,14 +22,12 @@ public class Main {
         Clock c = new Clock();
         Random r;// = new Random();
 
-        int[] dimensiones = {3, 20, 30, 40, 50,
-            70, 100, 150, 200, 300, 400, 600, 800, 1000, 1500, 2000,
-            2500, 3000};//, 3500, 4000, 5000, 7000};
+        int[] dimensiones = {6, 20, 30, 40, 50, 70, 100, 150, 200, 300, 400, 600, 800, 1000};//, 1500, 2000, 2500, 3000};//, 3500, 4000, 5000, 7000};
 
         SimpleMatrix A;
         SimpleMatrix B;
         SimpleMatrix C;
-        
+
         for (int i = 0; i < dimensiones.length; i++) {
             r = new Random(1);
             int dim = dimensiones[i];
@@ -40,7 +38,7 @@ public class Main {
             MatrixMatrixMult_DDRM.mult_reorder(A.getDDRM(), B.getDDRM(), C.getDDRM());
             c.stop();
             c.printTime("EJML dim:\t" + dim + "\t");
-
+            //C.print();
         }
 
         for (int i = 0; i < dimensiones.length; i++) {
@@ -53,32 +51,59 @@ public class Main {
             Parallel.mult_reorder(A.getDDRM(), B.getDDRM(), C.getDDRM());
             c.stop();
             c.printTime("Par dim:\t" + dim + "\t");
+            //C.print();
         }
-        
+
         for (int i = 0; i < dimensiones.length; i++) {
             r = new Random(1);
             int dim = dimensiones[i];
-            A = SimpleMatrix.random_DDRM(dim, dim*2, -200, 200, r);
-            B = SimpleMatrix.random_DDRM(dim*2, dim, -200, 200, r);
-            C = new SimpleMatrix(dim, dim, MatrixType.DDRM);
-            c.start();
-            Parallel.mult_small(A.getDDRM(), B.getDDRM(), C.getDDRM());
-            c.stop();
-            c.printTime("Par_small dim:\t" + dim + "\t");
-        }
-        
-        for (int i = 0; i < dimensiones.length; i++) {
-            r = new Random(1);
-            int dim = dimensiones[i];
-            A = SimpleMatrix.random_DDRM(dim, dim*2, -200, 200, r);
-            B = SimpleMatrix.random_DDRM(dim*2, dim, -200, 200, r);
+            A = SimpleMatrix.random_DDRM(dim, dim * 2, -200, 200, r);
+            B = SimpleMatrix.random_DDRM(dim * 2, dim, -200, 200, r);
             C = new SimpleMatrix(dim, dim, MatrixType.DDRM);
             c.start();
             MatrixMatrixMult_DDRM.mult_small(A.getDDRM(), B.getDDRM(), C.getDDRM());
             c.stop();
             c.printTime("EJML_small dim:\t" + dim + "\t");
-
+            //C.print();
+        }
+        
+        for (int i = 0; i < dimensiones.length; i++) {
+            r = new Random(1);
+            int dim = dimensiones[i];
+            A = SimpleMatrix.random_DDRM(dim, dim * 2, -200, 200, r);
+            B = SimpleMatrix.random_DDRM(dim * 2, dim, -200, 200, r);
+            C = new SimpleMatrix(dim, dim, MatrixType.DDRM);
+            c.start();
+            Parallel.mult_small(A.getDDRM(), B.getDDRM(), C.getDDRM());
+            c.stop();
+            c.printTime("Par_small dim:\t" + dim + "\t");
+            //C.print();
         }
 
+        for (int i = 0; i < dimensiones.length; i++) {
+            r = new Random(1);
+            int dim = dimensiones[i];
+            A = SimpleMatrix.random_DDRM(dim * 2, dim, -200, 200, r);
+            B = SimpleMatrix.random_DDRM(dim * 2, dim, -200, 200, r);
+            C = new SimpleMatrix(dim, dim, MatrixType.DDRM);
+            c.start();
+            MatrixMatrixMult_DDRM.multTransA_reorder(A.getDDRM(), B.getDDRM(), C.getDDRM());
+            c.stop();
+            c.printTime("EJML_AtB dim:\t" + dim + "\t");
+            //C.print();
+        }
+
+        for (int i = 0; i < dimensiones.length; i++) {
+            r = new Random(1);
+            int dim = dimensiones[i];
+            A = SimpleMatrix.random_DDRM(dim * 2, dim, -200, 200, r);
+            B = SimpleMatrix.random_DDRM(dim * 2, dim, -200, 200, r);
+            C = new SimpleMatrix(dim, dim, MatrixType.DDRM);
+            c.start();
+            Parallel.multTransA_reorder(A.getDDRM(), B.getDDRM(), C.getDDRM());
+            c.stop();
+            c.printTime("Par_AtB dim:\t" + dim + "\t");
+            //C.print();
+        }
     }
 }
