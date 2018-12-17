@@ -47,19 +47,19 @@ public class MnistBP {
         SimpleMatrix output = CSV.open("src/main/resources/mnist/mnist_train_out_50000.csv");
 
         //ajustamos la desviación standard
-        FilterConstantColumns filter = new FilterConstantColumns();
-        filter.fit(input);
-        System.out.println("Dimensiones iniciales");
-        input.printDimensions();
-        input = filter.eval(input);
-        System.out.println("Dimensiones finales");
-        input.printDimensions();
-
-        STD std = new STD();
-        std.fit(input);
-
-        //convertimos los datos
-        input = std.eval(input);
+//        FilterConstantColumns filter = new FilterConstantColumns();
+//        filter.fit(input);
+//        System.out.println("Dimensiones iniciales");
+//        input.printDimensions();
+//        input = filter.eval(input);
+//        System.out.println("Dimensiones finales");
+//        input.printDimensions();
+//
+//        STD std = new STD();
+//        std.fit(input);
+//
+//        //convertimos los datos
+//        input = std.eval(input);
         //================== /Preparación de los datos =========================
 
         //=================  configuraciones del ensayo ========================
@@ -74,6 +74,14 @@ public class MnistBP {
         Random r = new Random(1);
         Feedforward net = new Feedforward();
         net.addLayer(new Dense(inputSize, 300, TransferFunction.TANSIG, r));
+        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
+        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
+        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
+        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
+        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
+        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
+        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
+        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
         net.addLayer(new Dense(300, outputSize, TransferFunction.SOFTMAX, r));
 
         //==================== /Preparamos la RNA ======================
@@ -83,9 +91,9 @@ public class MnistBP {
         Backpropagation bp = new Backpropagation();
         bp.setLearningRate(0.01);
         bp.setRegularization(1e-4);
-        bp.setEpoch(1);
+        bp.setEpoch(10);
         //bp.setAcceleration(AccelerateRule.momentumRumelhart(0.9));
-        bp.setAcceleration(AccelerateRule.adam(0.9, 0.999, 1e-8, 2));
+//        bp.setAcceleration(AccelerateRule.adam(0.9, 0.999, 1e-8, 2));
         bp.setLossFunction(LossFunction.CROSSENTROPY);
 
         bp.train(net, input, output);
