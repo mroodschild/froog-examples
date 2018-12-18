@@ -45,19 +45,19 @@ public class MnistSCG {
         SimpleMatrix output = CSV.open("src/main/resources/mnist/mnist_train_out_50000.csv");
 
         //ajustamos la desviación standard
-//        FilterConstantColumns filter = new FilterConstantColumns();
-//        filter.fit(input);
-//        System.out.println("Dimensiones iniciales");
-//        input.printDimensions();
-//        input = filter.eval(input);
-//        System.out.println("Dimensiones finales");
-//        input.printDimensions();
-//
-//        STD std = new STD();
-//        std.fit(input);
-//
-//        //convertimos los datos
-//        input = std.eval(input);
+        FilterConstantColumns filter = new FilterConstantColumns();
+        filter.fit(input);
+        System.out.println("Dimensiones iniciales");
+        input.printDimensions();
+        input = filter.eval(input);
+        System.out.println("Dimensiones finales");
+        input.printDimensions();
+
+        STD std = new STD();
+        std.fit(input);
+
+        //convertimos los datos
+        input = std.eval(input);
         //================== /Preparación de los datos =========================
 
         //=================  configuraciones del ensayo ========================
@@ -79,14 +79,14 @@ public class MnistSCG {
         clock.start();
 
         SCG scg = new SCG();
-        scg.setEpoch(5);
+        scg.setEpoch(10);
         scg.setClassification(true);
         scg.setLossFunction(LossFunction.CROSSENTROPY);
         scg.train(net, input, output);
         clock.stop();
         double time1 = clock.timeSec();
 
-        System.out.println("Tiempo: " + time1);
+        System.out.println("Time: " + time1);
 
         SimpleMatrix out1 = Compite.eval(net.output(input).transpose());
 
