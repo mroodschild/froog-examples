@@ -69,7 +69,7 @@ public class MnistSCG {
         output = output.transpose();
 
         //==================== Preparamos la RNA =======================
-        Random r = new Random();
+        Random r = new Random(1);
         Feedforward net = new Feedforward();
         net.addLayer(new Dense(inputSize, 300, TransferFunction.TANSIG, r));
         net.addLayer(new Dense(300, outputSize, TransferFunction.SOFTMAX, r));
@@ -84,10 +84,8 @@ public class MnistSCG {
         scg.setLossFunction(LossFunction.CROSSENTROPY);
         scg.train(net, input, output);
         clock.stop();
-        double time1 = clock.timeSec();
-
-        System.out.println("Time: " + time1);
-
+        clock.printTime("Time:");
+        
         SimpleMatrix out1 = Compite.eval(net.output(input).transpose());
 
 //        System.out.println("Tiempo red 1: " + time1 + " Tiempo red 2: " + time2 + " Tiempo red 3: " + time3);

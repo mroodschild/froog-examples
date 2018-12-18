@@ -49,7 +49,7 @@ public class IrisSCG {
 //        //normalization
 //        input = std.eval(input);
         
-        Random random = new Random(3);
+        Random random = new Random();
         
         //set data in horizontal format (a column is a register and a row is a feature)
         input = input.transpose();
@@ -57,12 +57,12 @@ public class IrisSCG {
 
         //setting backpropagation
         SCG scg = new SCG();
-        scg.setEpoch(100);
+        scg.setEpoch(300);
         scg.setClassification(true);
         scg.setLossFunction(LossFunction.CROSSENTROPY);
 
         //number of neurons
-        int Nhl = 5;
+        int Nhl = 2;
 
         Feedforward net = new Feedforward();
 
