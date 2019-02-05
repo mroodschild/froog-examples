@@ -90,8 +90,8 @@ public class MnistBP {
 
         Backpropagation bp = new Backpropagation();
         bp.setLearningRate(0.01);
-        bp.setRegularization(1e-4);
-        bp.setEpoch(30);
+        bp.setRegularization(1e-15);
+        bp.setEpoch(5);
         //bp.setAcceleration(AccelerateRule.momentumRumelhart(0.9));
         bp.setAcceleration(AccelerateRule.adam(0.9, 0.999, 1e-8, 2));
         bp.setLossFunction(LossFunction.CROSSENTROPY);
