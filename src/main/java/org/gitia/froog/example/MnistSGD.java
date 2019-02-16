@@ -28,7 +28,9 @@ import org.gitia.froog.layer.Dense;
 import org.gitia.froog.statistics.Clock;
 import org.gitia.froog.optimizer.Backpropagation;
 import org.ejml.simple.SimpleMatrix;
+import org.gitia.froog.layer.initialization.WeightInit;
 import org.gitia.froog.lossfunction.LossFunction;
+import org.gitia.froog.optimizer.SGD;
 import org.gitia.froog.optimizer.accelerate.AccelerateRule;
 import org.gitia.froog.statistics.Compite;
 import org.gitia.froog.statistics.ConfusionMatrix;
@@ -38,7 +40,7 @@ import org.gitia.froog.transferfunction.TransferFunction;
  *
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
-public class MnistBP {
+public class MnistSGD {
 
     public static void main(String[] args) {
 
@@ -69,38 +71,29 @@ public class MnistBP {
 
         input = input.transpose();
         output = output.transpose();
-        
-        
 
         //==================== Preparamos la RNA =======================
-        Random r = new Random(1);
+        Random r = new Random();
         Feedforward net = new Feedforward();
-        net.addLayer(new Dense(inputSize, 300, TransferFunction.TANSIG, r));
-        
-        //net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
-//        net.addLayer(new Dense(32, 32, TransferFunction.RELU, r));
-//        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
-//        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
-//        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
-//        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
-//        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
-//        net.addLayer(new Dense(300, 300, TransferFunction.TANSIG, r));
+        net.addLayer(new Dense(inputSize, 300, TransferFunction.TANSIG, WeightInit.DEFAULT, r));
+       // net.addLayer(new Dense(50, 100, TransferFunction.TANSIG, WeightInit.DEFAULT, 0.5, r));
         net.addLayer(new Dense(300, outputSize, TransferFunction.SOFTMAX, r));
 
         //==================== /Preparamos la RNA ======================
         Clock clock = new Clock();
         clock.start();
 
-        Backpropagation bp = new Backpropagation();
-        bp.setLearningRate(0.01);
-        bp.setRegularization(1e-4);
-        
-        bp.setEpoch(10);
-        //bp.setAcceleration(AccelerateRule.momentumRumelhart(0.9));
-        bp.setAcceleration(AccelerateRule.adam(0.9, 0.999, 1e-8, 2));
-        bp.setLossFunction(LossFunction.CROSSENTROPY);
+        SGD sgd = new SGD();
+        sgd.setLearningRate(0.01);
+        //sgd.setBatchSize(30);
+        sgd.setRegularization(1e-4);
+        //sgd.setDropOut(true);
+        sgd.setEpoch(10);
+        sgd.setBatchSize(16);
+        //sgd.setAcceleration(AccelerateRule.adam(0.9, 0.999, 1e-8, 2));
+        sgd.setLossFunction(LossFunction.CROSSENTROPY);
 
-        bp.train(net, input, output);
+        sgd.train(net, input, output);
 
         clock.stop();
         double time1 = clock.timeSec();

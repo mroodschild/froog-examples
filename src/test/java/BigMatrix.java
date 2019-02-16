@@ -4,10 +4,7 @@
  * and open the template in the editor.
  */
 
-import java.io.IOException;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.ejml.data.MatrixType;
 import org.ejml.simple.SimpleMatrix;
 import org.gitia.froog.statistics.Clock;
