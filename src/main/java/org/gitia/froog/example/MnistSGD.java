@@ -89,8 +89,8 @@ public class MnistSGD {
         sgd.setRegularization(1e-4);
         //sgd.setDropOut(true);
         sgd.setEpoch(10);
-        sgd.setBatchSize(16);
-        //sgd.setAcceleration(AccelerateRule.adam(0.9, 0.999, 1e-8, 2));
+        sgd.setBatchSize(32);
+        sgd.setAcceleration(AccelerateRule.adam(0.9, 0.999, 1e-8, 2));
         sgd.setLossFunction(LossFunction.CROSSENTROPY);
 
         sgd.train(net, input, output);
