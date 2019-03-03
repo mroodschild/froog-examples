@@ -19,13 +19,12 @@ import org.ejml.dense.row.CommonOps_DDRM;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 /**
  *
  * @author Matías Roodschild <mroodschild@gmail.com>
  */
 public class MatrixMatrixMult_DDRM_Parallel {
-    
+
     public static void mult_reorder(DMatrix1Row a, DMatrix1Row b, DMatrix1Row c) {
         if (a == c || b == c) {
             throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
@@ -139,5 +138,53 @@ public class MatrixMatrixMult_DDRM_Parallel {
             }
         });
     }
-    
+
+    /**
+     * @see CommonOps_DDRM#multAdd( org.ejml.data.DMatrix1Row,
+     * org.ejml.data.DMatrix1Row, org.ejml.data.DMatrix1Row)
+     */
+    public static void multAdd_reorder(DMatrix1Row a, DMatrix1Row b, DMatrix1Row c) {
+        if (a == c || b == c) {
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        } else if (a.numCols != b.numRows) {
+            throw new MatrixDimensionException("The 'a' and 'b' matrices do not have compatible dimensions");
+        }
+
+        c.reshape(a.numRows, b.numCols);
+
+        if (a.numCols == 0 || a.numRows == 0) {
+            return;
+        }
+
+        int endOfKLoop = b.numRows * b.numCols;
+
+        IntStream.range(0, a.numRows).parallel().forEach(i -> {
+            int indexA = i * a.numCols;
+            // need to assign c.data to a value initially
+            int indexB = 0;
+            int cStart = i * c.numCols;
+            int indexC = cStart;
+            int end = indexB + b.numCols;
+
+            double valA = a.get(indexA++);
+
+            while (indexB < end) {
+                c.plus(indexC++, valA * b.get(indexB++));
+            }
+
+            //indexC = cStart;
+            // now add to it
+            while (indexB != endOfKLoop) { // k loop
+                indexC = cStart;
+                end = indexB + b.numCols;
+
+                valA = a.get(indexA++);
+
+                while (indexB < end) { // j loop
+                    c.plus(indexC++, valA * b.get(indexB++));
+                }
+            }
+        });
+    }
+
 }

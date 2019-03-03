@@ -23,7 +23,7 @@ public class Main {
         Clock c = new Clock();
         Random r;// = new Random();
 
-        int[] dimensiones = {6, 20, 30, 40, 50, 70, 100, 150, 200, 300, 400, 600, 800, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 7000, 10000, 12000};//,17000};
+        int[] dimensiones = {6};//, 20, 30, 40, 50, 70, 100, 150, 200, 300, 400, 600, 800, 1000, 1500, 2000, 2500, 3000, 3500, 4000};//, 5000, 7000, 10000, 12000};//,17000};
 
         SimpleMatrix A;
         SimpleMatrix B;
@@ -131,7 +131,6 @@ public class Main {
 //            c.printTime("MatrixVectorMult_DDRM_mult_orig dim:\t" + dim + "\t element_sum:\t"+C.elementSum());
 ////            C.transpose().print();
 //        }
-
 //        for (int i = 0; i < dimensiones.length; i++) {
 //            r = new Random(1);
 //            int dim = dimensiones[i];
@@ -155,7 +154,6 @@ public class Main {
 //            c.printTime("CommonOps_DDRM_elementExp dim:\t" + dim + "\t element_sum:\t" + C.elementSum());
 ////            C.transpose().print();
 //        }
-        
 //        for (int i = 0; i < dimensiones.length; i++) {
 //            r = new Random(1);
 //            int dim = dimensiones[i];
@@ -177,29 +175,65 @@ public class Main {
 //            c.printTime("CommonOps_DDRM_scale dim:\t" + dim + "\t element_sum:\t" + A.elementSum());
 ////            C.transpose().print();
 //        }
-        
-        for (int i = 0; i < dimensiones.length; i++) {
-            r = new Random(1);
-            int dim = dimensiones[i];
-            A = SimpleMatrix.random_DDRM(dim, dim, -200, 200, r);
-            C = new SimpleMatrix(dim, dim, MatrixType.DDRM);
-            c.start();
-            CommonOps_DDRM_Parallel.elementPower(A.getDDRM(),-2,C.getDDRM());
-            c.stop();
-            c.printTime("CommonOps_DDRM_elementPower_parallel dim:\t" + dim + "\t element_sum:\t" + C.elementSum());
-//            C.transpose().print();
-        }
+//        for (int i = 0; i < dimensiones.length; i++) {
+//            r = new Random(1);
+//            int dim = dimensiones[i];
+//            A = SimpleMatrix.random_DDRM(dim, dim, -200, 200, r);
+//            C = new SimpleMatrix(dim, dim, MatrixType.DDRM);
+//            c.start();
+//            CommonOps_DDRM_Parallel.elementPower(A.getDDRM(),-2,C.getDDRM());
+//            c.stop();
+//            c.printTime("CommonOps_DDRM_elementPower_parallel dim:\t" + dim + "\t element_sum:\t" + C.elementSum());
+////            C.transpose().print();
+//        }
+//
+//        for (int i = 0; i < dimensiones.length; i++) {
+//            r = new Random(1);
+//            int dim = dimensiones[i];
+//            A = SimpleMatrix.random_DDRM(dim, dim, -200, 200, r);
+//            C = new SimpleMatrix(dim, dim, MatrixType.DDRM);
+//            c.start();
+//            CommonOps_DDRM.elementPower(A.getDDRM(),-2,C.getDDRM());
+//            c.stop();
+//            c.printTime("CommonOps_DDRM_elementPower dim:\t" + dim + "\t element_sum:\t" + C.elementSum());
+////            C.transpose().print();
+//        }
 
         for (int i = 0; i < dimensiones.length; i++) {
             r = new Random(1);
             int dim = dimensiones[i];
-            A = SimpleMatrix.random_DDRM(dim, dim, -200, 200, r);
-            C = new SimpleMatrix(dim, dim, MatrixType.DDRM);
+            A = SimpleMatrix.random_DDRM(dim, dim+1, -200, 200, r);
+            B = SimpleMatrix.random_DDRM(dim+1, dim, -200, 200, r);
+            C = SimpleMatrix.random_DDRM(dim, dim, -200, 200, r);
+            //C = new SimpleMatrix(dim, dim, MatrixType.DDRM);
             c.start();
-            CommonOps_DDRM.elementPower(A.getDDRM(),-2,C.getDDRM());
+            //C=A.mult(B).plus(C).transpose();
+            MatrixMatrixMult_DDRM_Parallel.multAdd_reorder(A.getDDRM(),B.getDDRM(),C.getDDRM());
             c.stop();
-            c.printTime("CommonOps_DDRM_elementPower dim:\t" + dim + "\t element_sum:\t" + C.elementSum());
+            c.printTime("CommonOps_DDRM_multAdd_reorder_parallel dim:\t" + dim + "\t element_sum:\t" + C.elementSum());
 //            C.transpose().print();
+C.print();
+        }
+        
+        for (int i = 0; i < dimensiones.length; i++) {
+        //for (int i = 0; i < 1; i++) {
+            r = new Random(1);
+            int dim = dimensiones[i];
+            A = SimpleMatrix.random_DDRM(dim, dim+1, -200, 200, r);
+            B = SimpleMatrix.random_DDRM(dim+1, dim, -200, 200, r);
+            C = SimpleMatrix.random_DDRM(dim, dim, -200, 200, r);
+//
+//            A = new SimpleMatrix(4, 4, true, new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
+//            B = new SimpleMatrix(4, 4, true, new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
+//            C = new SimpleMatrix(4, 4, true, new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
+
+            //C = new SimpleMatrix(dim, dim, MatrixType.DDRM);
+            c.start();
+            MatrixMatrixMult_DDRM.multAdd_reorder(A.getDDRM(), B.getDDRM(), C.getDDRM());
+            c.stop();
+            c.printTime("CommonOps_DDRM_multAdd_reorder dim:\t" + dim + "\t element_sum:\t" + C.elementSum());
+            //C.transpose().print();
+            C.print();
         }
 
     }
